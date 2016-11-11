@@ -1,0 +1,1 @@
+pre_data_path='/home/lipiji/PG_BOW_DEMO/images/';
