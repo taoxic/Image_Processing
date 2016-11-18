@@ -50,9 +50,8 @@ for i=1:6
 
 end
 
-
-
-
-
 trainlabel= double(trainlabel);
 testlabel = double(testlabel);
+
+model = svmtrain(trainlabel,A);
+[predicted_label, accuracy, decision_values] = svmpredict(testlabel, B, model);
