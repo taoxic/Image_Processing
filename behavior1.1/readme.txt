@@ -44,6 +44,6 @@
 'PlayingGuitar','RidingBike' 90%,90%,90%
 'RidingBike','RidingHorse' 90%,90%,90%
 6.只有'Phoning','PlayingGuitar';'Phoning','RidingBike'两组识别率有5%左右的下降，其它都明显提升。四类识别率有提升。
-在每组中，识别错误的图像编号基本不变，又可能是图像目标与背景融合不易识别
+在每组中，识别错误的图像编号基本不变，有可能是图像目标与背景融合不易识别
 
 
