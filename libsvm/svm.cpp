@@ -60,6 +60,10 @@ static void info(const char *fmt,...)
 static void info(const char *fmt,...) {}
 #endif
 
+
+
+
+
 //
 // Kernel Cache
 //
@@ -186,6 +190,9 @@ void Cache::swap_index(int i, int j)
 		}
 	}
 }
+
+
+
 
 //
 // Kernel evaluation
@@ -2119,6 +2126,9 @@ static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **
 	*count_ret = count;
 	free(data_label);
 }
+
+
+
 //根据选择的算法，来组织参加训练的分样本，以及进行训练结果的保存。其中会对样本进行初步的统计。
 //
 // Interface functions

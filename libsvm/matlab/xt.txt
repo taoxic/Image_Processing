@@ -39,9 +39,10 @@ validation accuracy/mean squared error on them.
 
 Options：可用的选项即表示的涵义如下
 　　-s svm类型：SVM设置类型(默认0)
-　　0 -- C-SVC
-　　1 --v-SVC
-　　2 – 一类SVM
+　　0 -- C-SVC ：C-支持向量分类机；参数C为惩罚系数，适当的参数C对分类Accuracy很关键。
+　　1 --v-SVC ：v-支持向量分类机；由于C的选取比较困难，用另一个参数v代替C。C是“无意义”的，
+v是有意义的。（book：《DM中的新方法--SVM》中说的非常详细）
+　　2 – 一类SVM ：单类别-支持向量机
 　　3 -- e -SVR
 　　4 -- v-SVR
 　　-t 核函数类型：核函数设置类型(默认2)
@@ -72,3 +73,40 @@ Options：可用的选项即表示的涵义如下
 数所支持的参数进行任意组合，如果设置的参数在函数或SVM类型中没有也不会产生影
 
 响，程序不会接受该参数；如果应有的参数设置不正确，参数将采用默认值。
+
+
+
+
+model
+
+odel =
+Parameters: [5x1 double]
+nr_class: 2
+totalSV: 259 % 支持向量的数目
+rho: 0.0514 % b
+Label: [2x1 double] % classification中标签的个数
+ProbA: []
+ProbB: []%使用-b参数时才能用到，用于概率估计
+nSV: [2x1 double] % 每类支持向量的个数
+sv_coef: [259x1 double] % 支持向量对应的Wi,支持向量在决策函数中的系数
+SVs: [259x13 double] % 装的是259个支持向量
+
+model.Parameters参数意义从上到下依次为：
+-s svm类型：SVM设置类型(默认0)
+-t 核函数类型：核函数设置类型(默认2)
+-d degree：核函数中的degree设置(针对多项式核函数)(默认3)
+-g r(gama)：核函数中的gamma函数设置(针对多项式/rbf/sigmoid核函数) (默认类别数目的倒数)
+-r coef0：核函数中的coef0设置(针对多项式/sigmoid核函数)((默认0)
+
+
+
+
+
+处理多类分类问题libsvm用的是one- versus-one法：
+    一对一法（one-versus-one,简称OVO SVMs或者pairwise）。其做法是在任意两类样本之间
+设计一个SVM，因此k个类别的样本就需要设计k(k-1)/2个SVM。当对一个未知样本 进行分类时，
+最后得票最多的类别即为该未知样本的类别。Libsvm中的多类分类就是根据这个方法实现的。
+    还是假设有四类A,B,C,D 四类。在训练的时候我选择A,B; A,C; A,D; B,C; B,D;C,D所对应的向量作为训练集，
+然后得到六个训练结果，在测试的时候，把对应的向量分别对六个结果进行测试，然后采取投票形式，
+最后得到一组结果。
+
