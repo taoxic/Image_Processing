@@ -48,5 +48,5 @@
 4. 通过特征选择，可以节约特征计算时间。
 
 ##三、参考
-[特征提取-特征后期融合-多核学习方法MKL](http://blog.csdn.net/wuhang19911024/article/details/46287639"csdn blog")<br>
-[基于SVM和多特征融合的图像分类](http://www.doc88.com/p-391511600900.html"csdn blog")<br>
+[特征提取-特征后期融合-多核学习方法MKL](http://blog.csdn.net/wuhang19911024/article/details/46287639)<br>
+[基于SVM和多特征融合的图像分类](http://www.doc88.com/p-391511600900.html)<br>
