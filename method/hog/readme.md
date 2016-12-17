@@ -10,5 +10,5 @@
 首先将图像分成小的连通区域，我们把它叫细胞单元然后采集细胞单元中各像素点的梯度的或边缘的方向直方图，
 并分别统计各个细胞直方图的方向特性，最后把这些直方图组合起来就可以构成特征描述器，输送给后端识别算法模块。
 ###4、实现步骤和参数
-![](https://github.com/taoxic/matlab/raw/master/method/img/hogbuzhou.jpg)<br>
-![](https://github.com/taoxic/matlab/raw/master/method/img/hogcanshu.jpg)
+![](https://github.com/taoxic/matlab/raw/master/method/img/hogbuzhou.bmp)<br>
+![](https://github.com/taoxic/matlab/raw/master/method/img/hogcanshu.bmp)
