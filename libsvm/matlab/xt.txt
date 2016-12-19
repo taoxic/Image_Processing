@@ -39,7 +39,9 @@ validation accuracy/mean squared error on them.
 
 Options：可用的选项即表示的涵义如下
 　　-s svm类型：SVM设置类型(默认0)
+
 　　0 -- C-SVC ：C-支持向量分类机；参数C为惩罚系数，适当的参数C对分类Accuracy很关键。
+
 　　1 --v-SVC ：v-支持向量分类机；由于C的选取比较困难，用另一个参数v代替C。C是“无意义”的，
 v是有意义的。（book：《DM中的新方法--SVM》中说的非常详细）
 　　2 – 一类SVM ：单类别-支持向量机

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//定义了一批C语言字符分类函数，用于测试字符是否属于特定的字符类别，如字母字符、控制字符等等
 #include <ctype.h>
+//errno.h 是C语言C标准函式库里的标头档，定义了通过错误码来回报错误资讯的宏
 #include <errno.h>
 #include "svm.h"
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
@@ -48,13 +50,19 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
+//读取svm的参数
 void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name);
+//读取数据集
 void read_problem(const char *filename);
 void do_cross_validation();
 
+//svm的参数
 struct svm_parameter param;		// set by parse_command_line
+//数据集
 struct svm_problem prob;		// set by read_problem
+//保存训练后的模型
 struct svm_model *model;
+//单个特征
 struct svm_node *x_space;
 int cross_validation;
 int nr_fold;
@@ -62,13 +70,16 @@ int nr_fold;
 static char *line = NULL;
 static int max_line_len;
 
+//读取命令行
 static char* readline(FILE *input)
 {
 	int len;
 	
+	//fegets()从文件结构体指针stream中读取数据，每次读取一行
 	if(fgets(line,max_line_len,input) == NULL)
 		return NULL;
 
+	//char *strrchr(const char *str, char c);查找一个字符c在另一个字符串str中末次出现的位置
 	while(strrchr(line,'\n') == NULL)
 	{
 		max_line_len *= 2;
@@ -80,6 +91,8 @@ static char* readline(FILE *input)
 	return line;
 }
 
+
+// int   main(int   argc,   char*   argv[])；argc是命令行总的参数个数 ，argv[]是argc个参数，其中第0个参数是程序的全名，以后的参数 
 int main(int argc, char **argv)
 {
 	char input_file_name[1024];

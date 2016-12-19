@@ -11,6 +11,8 @@
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
 typedef signed char schar;
+
+//比较大小，交换数值，克隆类方法的模板类内联方法，可以提高程序效率
 #ifndef min
 template <class T> static inline T min(T x,T y) { return (x<y)?x:y; }
 #endif
@@ -23,6 +25,11 @@ template <class S, class T> static inline void clone(T*& dst, S* src, int n)
 	dst = new T[n];
 	memcpy((void *)dst,(void *)src,sizeof(T)*n);
 }
+
+
+
+
+
 static inline double powi(double base, int times)
 {
 	double tmp = base, ret = 1.0;
@@ -34,6 +41,8 @@ static inline double powi(double base, int times)
 	}
 	return ret;
 }
+
+
 //这里使用了 define，非内联函数
 #define INF HUGE_VAL
 #define TAU 1e-12
@@ -44,7 +53,11 @@ static void print_string_stdout(const char *s)
 	fputs(s,stdout);
 	fflush(stdout);
 }
+
+
 static void (*svm_print_string) (const char *) = &print_string_stdout;
+
+
 //以下的函数用作调试
 #if 1
 static void info(const char *fmt,...)
@@ -209,6 +222,10 @@ public:
 	virtual ~QMatrix() {}
 };
 
+
+
+
+//Kernel类主要是为SVM的核函数服务的，里面实现了SVM常用的核函数，通过函数指针来使用这些核函数。
 class Kernel: public QMatrix {
 public:
 	//构造函数。初始化类中的部分常量、指定核函数、克隆样本数据。
@@ -328,6 +345,9 @@ double Kernel::dot(const svm_node *px, const svm_node *py)
 	return sum;
 }
 
+
+
+
 //核函数。但只有在预报时才用到。
 double Kernel::k_function(const svm_node *x, const svm_node *y,
 			  const svm_parameter& param)
@@ -388,6 +408,9 @@ double Kernel::k_function(const svm_node *x, const svm_node *y,
 	}
 }
 
+
+
+//Solver类是一个SVM优化求解的实现技术：SMO，即序贯最小优化算法。
 // An SMO algorithm in Fan et al., JMLR 6(2005), p. 1889--1918
 // Solves:
 //
@@ -406,6 +429,8 @@ double Kernel::k_function(const svm_node *x, const svm_node *y,
 //
 // solution will be put in \alpha, objective value will be put in obj
 //
+
+
 class Solver {
 public:
 	Solver() {};
@@ -526,6 +551,11 @@ void Solver::reconstruct_gradient()
 	}
 }
 
+//****************************************************************
+//	s.Solve(l, SVC_Q(*prob,*param,y), minus_ones, y,alpha, Cp, Cn, param->eps, si, param->shrinking);
+//
+//
+
 void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		   double *alpha_, double Cp, double Cn, double eps,
 		   SolutionInfo* si, int shrinking)
@@ -580,7 +610,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			}
 	}
 
-	// optimization step
+	// optimization step最优化
 
 	int iter = 0;
 	int max_iter = max(10000000, l>INT_MAX/100 ? INT_MAX : 100*l);
@@ -1296,9 +1326,14 @@ double Solver_NU::calculate_rho()
 
 
 
-//
+//******************************************************
 // Q matrices for various formulations
 //
+//说明SVC_Q这个类以public的方式继承于Kernel，这样SVC_Q就拥有Kernel类的一切特性，
+//在自己的类里还可以重写基类Kernel里的函数，也可以拥有自己特有的函数
+
+
+
 class SVC_Q: public Kernel
 { 
 public:
@@ -1473,7 +1508,9 @@ private:
 	double *QD;
 };
 
-//
+
+
+//*************************************************************************
 // construct and solve various formulations
 //
 static void solve_c_svc(
@@ -1498,18 +1535,29 @@ static void solve_c_svc(
 		alpha, Cp, Cn, param->eps, si, param->shrinking);
 
 	double sum_alpha=0;
+	
+	
+	
 	for(i=0;i<l;i++)
 		sum_alpha += alpha[i];
 
 	if (Cp==Cn)
 		info("nu = %f\n", sum_alpha/(Cp*prob->l));
-
+	
+	//
 	for(i=0;i<l;i++)
 		alpha[i] *= y[i];
 
 	delete[] minus_ones;
 	delete[] y;
 }
+
+
+
+
+
+
+
 
 static void solve_nu_svc(
 	const svm_problem *prob, const svm_parameter *param,
@@ -1674,26 +1722,47 @@ static void solve_nu_svr(
 	delete[] y;
 }
 
-//
+
+
+// 根据svm参数决定采用哪种类型的svm
 // decision_function
 //
+//结果会存放到alpha
 struct decision_function
 {
 	double *alpha;
 	double rho;
 };
 
+
+//*********************************************************************
 static decision_function svm_train_one(
 	const svm_problem *prob, const svm_parameter *param,
 	double Cp, double Cn)
 {
+	//alpha为样本总数
 	double *alpha = Malloc(double,prob->l);
 	Solver::SolutionInfo si;
+	
+	//根据svm类型，执行相应的操作
 	switch(param->svm_type)
 	{
+		
+		
+		
+		
+		
+		
+		//***************************
 		case C_SVC:
 			solve_c_svc(prob,param,alpha,&si,Cp,Cn);
 			break;
+		//***************************
+		
+		
+		
+		
+		
 		case NU_SVC:
 			solve_nu_svc(prob,param,alpha,&si);
 			break;
@@ -1735,10 +1804,13 @@ static decision_function svm_train_one(
 	info("nSV = %d, nBSV = %d\n",nSV,nBSV);
 
 	decision_function f;
-	f.alpha = alpha;
-	f.rho = si.rho;
+	f.alpha = alpha;  //相当于判别函数中的alpha
+	f.rho = si.rho;   //相当于判别函数中的b
 	return f;
 }
+
+
+
 
 // Platt's binary SVM Probablistic Output: an improvement from Lin et al.
 static void sigmoid_train(
@@ -1864,6 +1936,9 @@ static double sigmoid_predict(double decision_value, double A, double B)
 		return 1.0/(1+exp(fApB)) ;
 }
 
+
+
+//*************************************************************************
 // Method 2 from the multiclass_prob paper by Wu, Lin, and Weng
 static void multiclass_probability(int k, double **r, double *p)
 {
@@ -2049,32 +2124,53 @@ static double svm_svr_probability(
 	return mae;
 }
 
+//*************************************************************************
 
+//如何将一堆数据归类到一起，同类的连续存储！
+/*输出值
+nr_class_ret——统计得出样本集的类别总数
+label_ret——指向存储类别标号的数组
+start_ret——指向存储每个类别的起始位置的数组
+count_tet——指向存储每个类别的样本个数的数组
+perm——指向原始数据的索引数组*/
 // label: label name, start: begin of each class, count: #data of classes, perm: indices to the original data
 // perm, length l, must be allocated before calling this subroutine
 static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **label_ret, int **start_ret, int **count_ret, int *perm)
 {
+	//l为pro数据集样本总数
 	int l = prob->l;
+	//最大类别数
 	int max_nr_class = 16;
+	//类别数
 	int nr_class = 0;
+	//申请存储空间
+	//label为类别名，count所有类别的数据
 	int *label = Malloc(int,max_nr_class);
 	int *count = Malloc(int,max_nr_class);
 	int *data_label = Malloc(int,l);
+	
 	int i;
-
-	for(i=0;i<l;i++)
+//这部分代码中的for循环的功能：统计类别总数、将相应的相同类别y[i]赋到相应的label，并统计各个类别的样本数量count。
+	for(i=0;i<l;i++) //遍历所有的样本数据
 	{
+		//第i个样本所属的类别prob->y[i]
 		int this_label = (int)prob->y[i];
+		
 		int j;
+		
+		//判断属于那一类样本，并该类别计数+1
 		for(j=0;j<nr_class;j++)
 		{
 			if(this_label == label[j])
 			{
+				//记录该类别样本个数
 				++count[j];
 				break;
 			}
 		}
+		//类别编号赋值给data_label
 		data_label[i] = j;
+		
 		if(j == nr_class)
 		{
 			if(nr_class == max_nr_class)
@@ -2089,7 +2185,7 @@ static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **
 		}
 	}
 
-	//
+	//本部分主要是处理二类分类，当第一个出现的是-1时，负责把-1和+1的数据对调
 	// Labels are ordered by their first occurrence in the training set. 
 	// However, for two-class sets with -1/+1 labels and -1 appears first, 
 	// we swap labels to ensure that internally the binary SVM has positive data corresponding to the +1 instances.
@@ -2107,10 +2203,16 @@ static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **
 		}
 	}
 
-	int *start = Malloc(int,nr_class);
+	//下面这一部分代码是用来计算每个类别的起始位置start、以及各个样本分类后
+	//的在原始数据中的索引位置perm数组。其中perm[i]=j: i表示当前同类样本位置，j表示原始数据位置。
+	int *start = Malloc(int,nr_class);//每个类别都有对应的start指针
 	start[0] = 0;
+	
+	//根据count得出每个start的间隔
 	for(i=1;i<nr_class;i++)
 		start[i] = start[i-1]+count[i-1];
+	
+	//遍历所有的样本数据，建立perm索引
 	for(i=0;i<l;i++)
 	{
 		perm[start[data_label[i]]] = i;
@@ -2128,7 +2230,7 @@ static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **
 }
 
 
-
+//*********************************************************************************************
 //根据选择的算法，来组织参加训练的分样本，以及进行训练结果的保存。其中会对样本进行初步的统计。
 //
 // Interface functions
@@ -2136,9 +2238,11 @@ static void svm_group_classes(const svm_problem *prob, int *nr_class_ret, int **
 svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 {
 	svm_model *model = Malloc(svm_model,1);
-	model->param = *param;
-	model->free_sv = 0;	// XXX
+	model->param = *param;/* parameter 训练参数*/
+	model->free_sv = 0;	 /* 0 if svm_model is created by svm_train */
 
+	
+	//svm的类型 ***C_SVC, NU_SVC****     , ONE_CLASS, EPSILON_SVR, NU_SVR 
 	if(param->svm_type == ONE_CLASS ||
 	   param->svm_type == EPSILON_SVR ||
 	   param->svm_type == NU_SVR)
@@ -2158,6 +2262,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			model->probA[0] = svm_svr_probability(prob,param);
 		}
 
+		//
 		decision_function f = svm_train_one(prob,param,0,0);
 		model->rho = Malloc(double,1);
 		model->rho[0] = f.rho;
@@ -2184,30 +2289,51 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 	}
 	else
 	{
+		//******************************************************************************
+		//用于分类的svm类型
+		// ***C_SVC, NU_SVC**** 
 		// classification
+		
+		//数据集的指针
 		int l = prob->l;
+		//类别数
 		int nr_class;
+		
+		
 		int *label = NULL;
+		
 		int *start = NULL;
+		
 		int *count = NULL;
 		int *perm = Malloc(int,l);
 
 		// group training data of the same class
 		svm_group_classes(prob,&nr_class,&label,&start,&count,perm);
+		
+		
 		if(nr_class == 1) 
 			info("WARNING: training data in only one class. See README for details.\n");
 		
+		//用来存储单一向量中的单个特征
+		/*struct svm_node
+		{
+			int index;
+			double value;
+		};*/
+		//申请可以放下所有样本的空间x，并放入元素
 		svm_node **x = Malloc(svm_node *,l);
+		
 		int i;
 		for(i=0;i<l;i++)
 			x[i] = prob->x[perm[i]];
 
-		// calculate weighted C
+		// calculate weighted C 计算权值C 惩罚因子
 
 		double *weighted_C = Malloc(double, nr_class);
 		for(i=0;i<nr_class;i++)
 			weighted_C[i] = param->C;
-		for(i=0;i<param->nr_weight;i++)
+		
+		for(i=0;i<param->nr_weight;i++)   //nr_weight为权重的数目
 		{	
 			int j;
 			for(j=0;j<nr_class;j++)
@@ -2218,31 +2344,58 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			else
 				weighted_C[j] *= param->weight[i];
 		}
-
+		
+		//训练k*(k-1)/2个模型
 		// train k*(k-1)/2 models
 		
+		
+		//为每个样本都做一个记号false，便于统计SV
 		bool *nonzero = Malloc(bool,l);
 		for(i=0;i<l;i++)
 			nonzero[i] = false;
+		
+		//申请用来保存二类分类结果，一共有k*(k-1)/2个结果
 		decision_function *f = Malloc(decision_function,nr_class*(nr_class-1)/2);
 
 		double *probA=NULL,*probB=NULL;
+		
+		//指明是否要做概率估计
 		if (param->probability)
 		{
 			probA=Malloc(double,nr_class*(nr_class-1)/2);
 			probB=Malloc(double,nr_class*(nr_class-1)/2);
 		}
 
+		//****************************************************************
+		/*数据集的存储
+		struct svm_problem
+		{
+			//记录样本总数
+			int l;
+			//指向样本所属类别的数组
+			double *y;
+			//指向一个存储内容为指针的数组
+			struct svm_node **x;
+		};*/
+
+		
 		int p = 0;
 		for(i=0;i<nr_class;i++)
+			
 			for(int j=i+1;j<nr_class;j++)
 			{
 				svm_problem sub_prob;
+				
+				//第i类和第j类样本的起始位置和其对应的样本数
 				int si = start[i], sj = start[j];
 				int ci = count[i], cj = count[j];
+				
+				//申请存放这两类样本的空间
 				sub_prob.l = ci+cj;
-				sub_prob.x = Malloc(svm_node *,sub_prob.l);
-				sub_prob.y = Malloc(double,sub_prob.l);
+				sub_prob.x = Malloc(svm_node *,sub_prob.l);//样本
+				sub_prob.y = Malloc(double,sub_prob.l);//类别
+				
+				//分别遍历第i类和第j类所有样本，对应的样本node存放到sub_prob中
 				int k;
 				for(k=0;k<ci;k++)
 				{
@@ -2254,34 +2407,55 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 					sub_prob.x[ci+k] = x[sj+k];
 					sub_prob.y[ci+k] = -1;
 				}
-
+				
+				
 				if(param->probability)
 					svm_binary_svc_probability(&sub_prob,param,weighted_C[i],weighted_C[j],probA[p],probB[p]);
 
+				//*************************************************************
+				//将两个样本的子样本集sub_prob、参数和惩罚因子C,使用svm_train_one函数生成判别式，并返回判别式结果
+				//decision_function f;
+				//f.alpha = alpha;  //相当于判别函数中的alpha
+				//f.rho = si.rho;   //相当于判别函数中的b
+				
 				f[p] = svm_train_one(&sub_prob,param,weighted_C[i],weighted_C[j]);
+				
+				
+				//统计一下nozero，如果nozero已经是真，就不变，否则改为真
+				//fabs求浮点数x的绝对值
 				for(k=0;k<ci;k++)
 					if(!nonzero[si+k] && fabs(f[p].alpha[k]) > 0)
 						nonzero[si+k] = true;
+					
 				for(k=0;k<cj;k++)
 					if(!nonzero[sj+k] && fabs(f[p].alpha[ci+k]) > 0)
 						nonzero[sj+k] = true;
+					
+					
+					
 				free(sub_prob.x);
 				free(sub_prob.y);
 				++p;
 			}
 
+			
+		//构建输出模型
 		// build output
 
+		//类别数
 		model->nr_class = nr_class;
 		
+		//类别的标签
 		model->label = Malloc(int,nr_class);
 		for(i=0;i<nr_class;i++)
 			model->label[i] = label[i];
 		
+		//每两个类别的判别式中的b
 		model->rho = Malloc(double,nr_class*(nr_class-1)/2);
 		for(i=0;i<nr_class*(nr_class-1)/2;i++)
 			model->rho[i] = f[i].rho;
 
+		//是否进行参数估计
 		if(param->probability)
 		{
 			model->probA = Malloc(double,nr_class*(nr_class-1)/2);
@@ -2298,8 +2472,11 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			model->probB=NULL;
 		}
 
+		//支持向量总的个数
 		int total_sv = 0;
 		int *nz_count = Malloc(int,nr_class);
+		
+		//每一类别的SV的个数
 		model->nSV = Malloc(int,nr_class);
 		for(i=0;i<nr_class;i++)
 		{
@@ -2316,8 +2493,12 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		
 		info("Total nSV = %d\n",total_sv);
 
+		
 		model->l = total_sv;
+		
+		//保存支持向量的样本节点
 		model->SV = Malloc(svm_node *,total_sv);
+		
 		model->sv_indices = Malloc(int,total_sv);
 		p = 0;
 		for(i=0;i<l;i++)
@@ -2332,10 +2513,12 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		for(i=1;i<nr_class;i++)
 			nz_start[i] = nz_start[i-1]+nz_count[i-1];
 
+		//相当于判别函数中的alpha
 		model->sv_coef = Malloc(double *,nr_class-1);
 		for(i=0;i<nr_class-1;i++)
 			model->sv_coef[i] = Malloc(double,total_sv);
 
+		
 		p = 0;
 		for(i=0;i<nr_class;i++)
 			for(int j=i+1;j<nr_class;j++)
@@ -2351,6 +2534,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 				
 				int q = nz_start[i];
 				int k;
+				
 				for(k=0;k<ci;k++)
 					if(nonzero[si+k])
 						model->sv_coef[j-1][q++] = f[p].alpha[k];
@@ -2542,6 +2726,13 @@ double svm_get_svr_probability(const svm_model *model)
 	}
 }
 
+
+
+//*****************************************************************************
+//
+
+
+
 double svm_predict_values(const svm_model *model, const svm_node *x, double* dec_values)
 {
 	int i;
@@ -2563,42 +2754,65 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 	}
 	else
 	{
+		
+		//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+		
+		
 		int nr_class = model->nr_class;
 		int l = model->l;
 		
 		double *kvalue = Malloc(double,l);
+		
+		
 		for(i=0;i<l;i++)
 			kvalue[i] = Kernel::k_function(x,model->SV[i],model->param);
 
 		int *start = Malloc(int,nr_class);
 		start[0] = 0;
+		
 		for(i=1;i<nr_class;i++)
 			start[i] = start[i-1]+model->nSV[i-1];
 
+		//初始化投票空间
 		int *vote = Malloc(int,nr_class);
 		for(i=0;i<nr_class;i++)
 			vote[i] = 0;
 
+		
+		
+		//任意两类进行比较，并投票
 		int p=0;
 		for(i=0;i<nr_class;i++)
 			for(int j=i+1;j<nr_class;j++)
 			{
+				
 				double sum = 0;
+				//对应类别样本开始的起点指针
 				int si = start[i];
 				int sj = start[j];
+				//两类分别的支持向量数
 				int ci = model->nSV[i];
 				int cj = model->nSV[j];
 				
+				
 				int k;
+				//对应的判别函数中的alpha*
 				double *coef1 = model->sv_coef[j-1];
 				double *coef2 = model->sv_coef[i];
+				
+				
 				for(k=0;k<ci;k++)
 					sum += coef1[si+k] * kvalue[si+k];
 				for(k=0;k<cj;k++)
 					sum += coef2[sj+k] * kvalue[sj+k];
+				
+				
 				sum -= model->rho[p];
+				
+				
 				dec_values[p] = sum;
 
+				//根据dec_values[p]是否大于0进行投票
 				if(dec_values[p] > 0)
 					++vote[i];
 				else
@@ -2618,24 +2832,45 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 	}
 }
 
+
+//****************************************************************
+//SVM进行预测，参数为model和样本节点
+
+
 double svm_predict(const svm_model *model, const svm_node *x)
 {
 	int nr_class = model->nr_class;
+	
 	double *dec_values;
+	
 	if(model->param.svm_type == ONE_CLASS ||
 	   model->param.svm_type == EPSILON_SVR ||
 	   model->param.svm_type == NU_SVR)
 		dec_values = Malloc(double, 1);
 	else 
+		
+	
+		//申请k*(k-1)/2个决策值空间
 		dec_values = Malloc(double, nr_class*(nr_class-1)/2);
+		
+		
+		
+	//***调用svm_predict_values()进行预测
 	double pred_result = svm_predict_values(model, x, dec_values);
+	
+	
 	free(dec_values);
 	return pred_result;
 }
 
+//***********************************************************
+
 double svm_predict_probability(
 	const svm_model *model, const svm_node *x, double *prob_estimates)
 {
+	
+	
+	//*****************************
 	if ((model->param.svm_type == C_SVC || model->param.svm_type == NU_SVC) &&
 	    model->probA!=NULL && model->probB!=NULL)
 	{
@@ -2656,6 +2891,8 @@ double svm_predict_probability(
 				pairwise_prob[j][i]=1-pairwise_prob[i][j];
 				k++;
 			}
+			
+			
 		multiclass_probability(nr_class,pairwise_prob,prob_estimates);
 
 		int prob_max_idx = 0;
@@ -2666,11 +2903,15 @@ double svm_predict_probability(
 			free(pairwise_prob[i]);
 		free(dec_values);
 		free(pairwise_prob);
+		
 		return model->label[prob_max_idx];
 	}
 	else 
 		return svm_predict(model, x);
 }
+
+
+
 
 static const char *svm_type_table[] =
 {
