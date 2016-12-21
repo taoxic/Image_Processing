@@ -1926,6 +1926,14 @@ static void sigmoid_train(
 	free(t);
 }
 
+
+
+
+
+//在预测概率中调用sigmoid_predict(dec_values[k],model->probA[k],model->probB[k])
+//sigmoid  S型的函数
+
+
 static double sigmoid_predict(double decision_value, double A, double B)
 {
 	double fApB = decision_value*A+B;
@@ -1940,6 +1948,11 @@ static double sigmoid_predict(double decision_value, double A, double B)
 
 //*************************************************************************
 // Method 2 from the multiclass_prob paper by Wu, Lin, and Weng
+//
+//multiclass_probability(nr_class,pairwise_prob,prob_estimates);
+//
+
+
 static void multiclass_probability(int k, double **r, double *p)
 {
 	int t,j;
@@ -2729,7 +2742,7 @@ double svm_get_svr_probability(const svm_model *model)
 
 
 //*****************************************************************************
-//
+//计算结果保存在dec_values中
 
 
 
@@ -2781,7 +2794,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		
 		
 		//任意两类进行比较，并投票
-		int p=0;
+		int p=0;//分类判别式下标
 		for(i=0;i<nr_class;i++)
 			for(int j=i+1;j<nr_class;j++)
 			{
@@ -2800,9 +2813,10 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 				double *coef1 = model->sv_coef[j-1];
 				double *coef2 = model->sv_coef[i];
 				
-				
+				//计算过程，与每个支持向量计算
 				for(k=0;k<ci;k++)
 					sum += coef1[si+k] * kvalue[si+k];
+					
 				for(k=0;k<cj;k++)
 					sum += coef2[sj+k] * kvalue[sj+k];
 				
@@ -2810,17 +2824,23 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 				sum -= model->rho[p];
 				
 				
+				
+				//将二分类判别式计算结果放入dec_values
 				dec_values[p] = sum;
 
-				//根据dec_values[p]是否大于0进行投票
+				//根据dec_values[p]是否大于0进行投票，对应的类别+1
 				if(dec_values[p] > 0)
 					++vote[i];
 				else
 					++vote[j];
+				
 				p++;
 			}
 
+			
 		int vote_max_idx = 0;
+		
+		//找到票数最多的类别下标，即为预测结果
 		for(i=1;i<nr_class;i++)
 			if(vote[i] > vote[vote_max_idx])
 				vote_max_idx = i;
@@ -2828,13 +2848,15 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		free(kvalue);
 		free(start);
 		free(vote);
+		
+		//返回类别
 		return model->label[vote_max_idx];
 	}
 }
 
 
 //****************************************************************
-//SVM进行预测，参数为model和样本节点
+//SVM进行预测，参数为model和样本节点，返回预测类别结果
 
 
 double svm_predict(const svm_model *model, const svm_node *x)
@@ -2860,6 +2882,7 @@ double svm_predict(const svm_model *model, const svm_node *x)
 	
 	
 	free(dec_values);
+	
 	return pred_result;
 }
 
@@ -2870,19 +2893,29 @@ double svm_predict_probability(
 {
 	
 	
-	//*****************************
+	//******************************************************************************
 	if ((model->param.svm_type == C_SVC || model->param.svm_type == NU_SVC) &&
 	    model->probA!=NULL && model->probB!=NULL)
 	{
+		
+		
+		
 		int i;
 		int nr_class = model->nr_class;
+		
+		//调用svm_predict_values()进行预测，dec_values为运算结果
 		double *dec_values = Malloc(double, nr_class*(nr_class-1)/2);
 		svm_predict_values(model, x, dec_values);
 
 		double min_prob=1e-7;
+		
+		
 		double **pairwise_prob=Malloc(double *,nr_class);
 		for(i=0;i<nr_class;i++)
 			pairwise_prob[i]=Malloc(double,nr_class);
+		
+		
+		//根据dec_values和S型曲线得到的数值pairwise_prob
 		int k=0;
 		for(i=0;i<nr_class;i++)
 			for(int j=i+1;j<nr_class;j++)
@@ -2905,8 +2938,12 @@ double svm_predict_probability(
 		free(pairwise_prob);
 		
 		return model->label[prob_max_idx];
+		
+		
+		
 	}
 	else 
+		
 		return svm_predict(model, x);
 }
 

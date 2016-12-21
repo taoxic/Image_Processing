@@ -129,11 +129,18 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 	tplhs[0] = mxCreateDoubleMatrix(testing_instance_number, 1, mxREAL);
 	if(predict_probability)
 	{
+		
+		
+		
+		
 		// prob estimates are in plhs[2]
 		if(svm_type==C_SVC || svm_type==NU_SVC)
 			tplhs[2] = mxCreateDoubleMatrix(testing_instance_number, nr_class, mxREAL);
 		else
 			tplhs[2] = mxCreateDoubleMatrix(0, 0, mxREAL);
+		
+		
+		
 	}
 	else
 	{
@@ -174,11 +181,28 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 		{
 			if(svm_type==C_SVC || svm_type==NU_SVC)
 			{
+				
+				
+				
+//***************************************************************************
+				
+				//由于proA和proB为空，则直接返回预测的标签
 				predict_label = svm_predict_probability(model, x, prob_estimates);
+				
 				ptr_predict_label[instance_index] = predict_label;
+				
 				for(i=0;i<nr_class;i++)
 					ptr_prob_estimates[instance_index + i * testing_instance_number] = prob_estimates[i];
+				
+				
+				
+				
+				
+				
+				
+				
 			} else {
+				
 				predict_label = svm_predict(model,x);
 				ptr_predict_label[instance_index] = predict_label;
 			}
