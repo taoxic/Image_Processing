@@ -43,8 +43,17 @@ static void fake_answer(int nlhs, mxArray *plhs[])
 {
 	int i;
 	for(i=0;i<nlhs;i++)
+		//Create unpopulated two-dimensional, double-precision, floating-point mxArray
+		//A pointer to the created mxArray, if successful.Specify either mxREAL or mxCOMPLEX. If the data you plan to put into the mxArray
+		//has no imaginary components, specify mxREAL. If the data has some imaginary components, specify mxCOMPLEX.
 		plhs[i] = mxCreateDoubleMatrix(0, 0, mxREAL);
 }
+
+
+
+//nlhs为输出结果个数，plhs为输出参数，prhs为输入的参数，predict_probability = 0
+
+//[predicted_label, accuracy, decision_values] = svmpredict(testlabel_1, B, model);
 
 void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model *model, const int predict_probability)
 {
@@ -67,11 +76,15 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 	double *prob_estimates=NULL;
 
 	// prhs[1] = testing instance matrix
+	//mxGetM()为矩阵的行数即testing_instance_number特征向量的个数，
+	
 	feature_number = (int)mxGetN(prhs[1]);
 	testing_instance_number = (int)mxGetM(prhs[1]);
 	label_vector_row_num = (int)mxGetM(prhs[0]);
 	label_vector_col_num = (int)mxGetN(prhs[0]);
 
+	
+	//判断输入参数是否标准
 	if(label_vector_row_num!=testing_instance_number)
 	{
 		mexPrintf("Length of label vector does not match # of instances.\n");
@@ -84,11 +97,16 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 		fake_answer(nlhs, plhs);
 		return;
 	}
-
+	
+	
+	
+	//mxGetPr()获得矩阵指针值
+	//ptr_instance为特征向量的指针，ptr_label为标签的指针
 	ptr_instance = mxGetPr(prhs[1]);
 	ptr_label    = mxGetPr(prhs[0]);
 
 	// transpose instance matrix
+	//判断是否为稀疏矩阵
 	if(mxIsSparse(prhs[1]))
 	{
 		if(model->param.kernel_type == PRECOMPUTED)
@@ -118,6 +136,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 		}
 	}
 
+	//跳过
 	if(predict_probability)
 	{
 		if(svm_type==NU_SVR || svm_type==EPSILON_SVR)
@@ -127,6 +146,8 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 	}
 
 	tplhs[0] = mxCreateDoubleMatrix(testing_instance_number, 1, mxREAL);
+	
+	//跳过
 	if(predict_probability)
 	{
 		
@@ -144,6 +165,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 	}
 	else
 	{
+		//创建决策值的存储空间
 		// decision values are in plhs[2]
 		if(svm_type == ONE_CLASS ||
 		   svm_type == EPSILON_SVR ||
@@ -151,41 +173,55 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 		   nr_class == 1) // if only one class in training data, decision values are still returned.
 			tplhs[2] = mxCreateDoubleMatrix(testing_instance_number, 1, mxREAL);
 		else
+			
+		
 			tplhs[2] = mxCreateDoubleMatrix(testing_instance_number, nr_class*(nr_class-1)/2, mxREAL);
+			
+			
 	}
 
+	//预测的标签
 	ptr_predict_label = mxGetPr(tplhs[0]);
 	ptr_prob_estimates = mxGetPr(tplhs[2]);
+	//决策值
 	ptr_dec_values = mxGetPr(tplhs[2]);
+	
+	//存储一个特征向量的空间，feature_number为特征维数
 	x = (struct svm_node*)malloc((feature_number+1)*sizeof(struct svm_node) );
+	
+	
+	//遍历每一个测试样本,分别进行预测
 	for(instance_index=0;instance_index<testing_instance_number;instance_index++)
 	{
 		int i;
 		double target_label, predict_label;
 
+		//样本的类别
 		target_label = ptr_label[instance_index];
 
+		
 		if(mxIsSparse(prhs[1]) && model->param.kernel_type != PRECOMPUTED) // prhs[1]^T is still sparse
 			read_sparse_instance(pplhs[0], instance_index, x);
 		else
 		{
+			//对x进行赋值
 			for(i=0;i<feature_number;i++)
 			{
 				x[i].index = i+1;
 				x[i].value = ptr_instance[testing_instance_number*i+instance_index];
 			}
+			//最后一个特征值index为-1
 			x[feature_number].index = -1;
 		}
-
+		
+		
+		
+		
+		//跳过
 		if(predict_probability)
 		{
 			if(svm_type==C_SVC || svm_type==NU_SVC)
 			{
-				
-				
-				
-//***************************************************************************
-				
 				//由于proA和proB为空，则直接返回预测的标签
 				predict_label = svm_predict_probability(model, x, prob_estimates);
 				
@@ -193,20 +229,14 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 				
 				for(i=0;i<nr_class;i++)
 					ptr_prob_estimates[instance_index + i * testing_instance_number] = prob_estimates[i];
-				
-				
-				
-				
-				
-				
-				
-				
+
 			} else {
 				
 				predict_label = svm_predict(model,x);
 				ptr_predict_label[instance_index] = predict_label;
 			}
 		}
+
 		else
 		{
 			if(svm_type == ONE_CLASS ||
@@ -218,21 +248,40 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 				ptr_dec_values[instance_index] = res;
 			}
 			else
+				
+			
+//**********************************************************************************************************************
 			{
+				
 				double *dec_values = (double *) malloc(sizeof(double) * nr_class*(nr_class-1)/2);
+				
+				//预测的结果
 				predict_label = svm_predict_values(model, x, dec_values);
+				
 				if(nr_class == 1) 
 					ptr_dec_values[instance_index] = 1;
 				else
+					
+					//存放决策值
 					for(i=0;i<(nr_class*(nr_class-1))/2;i++)
 						ptr_dec_values[instance_index + i * testing_instance_number] = dec_values[i];
+					
+					
 				free(dec_values);
 			}
+			
+			
+			//将预测结果存放到feature_number
 			ptr_predict_label[instance_index] = predict_label;
+			
+			
 		}
 
+		//统计正确的个数
 		if(predict_label == target_label)
 			++correct;
+		
+		
 		error += (predict_label-target_label)*(predict_label-target_label);
 		sump += predict_label;
 		sumt += target_label;
@@ -240,6 +289,11 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 		sumtt += target_label*target_label;
 		sumpt += predict_label*target_label;
 		++total;
+		
+		
+		
+		
+		
 	}
 	if(svm_type==NU_SVR || svm_type==EPSILON_SVR)
 	{
@@ -250,9 +304,16 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 			);
 	}
 	else
+		
+	
+	
+	
+	//计算分类的正确率
 		info("Accuracy = %g%% (%d/%d) (classification)\n",
 			(double)correct/total*100,correct,total);
 
+			
+			
 	// return accuracy, mean squared error, squared correlation coefficient
 	tplhs[1] = mxCreateDoubleMatrix(3, 1, mxREAL);
 	ptr = mxGetPr(tplhs[1]);
@@ -292,6 +353,29 @@ void exit_with_help()
 		"  prob_estimates: If selected, probability estimate vector.\n"
 	);
 }
+/*
+整个c程序由一个接口子过程 mexFunction构成
+nlhs：输出参数数目 
+plhs：指向输出参数的指针 
+nrhs：输入参数数目 
+mxGetScalar(prhs[0]) ：把通过prhs[0]传递进来的mxArray类型的指针指向的数据（标量）赋给C程序里的变量;
+mxGetPr(prhs[0]) :从指向mxArray类型数据的prhs[0]获得了指向double类型的指针
+mxGetM(prhs[0]):获得矩阵的行数
+mxGetN(prhs[0]):获得矩阵的列数
+mxCreateDoubleMatrix(int m, int n, mxComplexity ComplexFlag) :实现内存的申请，m：待申请矩阵的行数 ； n：待申请矩阵的列数*/
+
+ /*  nlhs：mexFunction的第一个参数，它指示Matlab的调用命令中等号左侧有几个变量。例如，code 4中的调用，nlhs的值为2，因为它的等号左侧有两个变量，他们是a和b。
+    plhs: mexFunction的第二个参数，它指示Matlab的调用命令中等号左侧变量的指针。例如，code 4中的调用，plhs[0]表示的是a，plhs[1]表示的是b。
+    nrhs：mexFunction的第三个参数，它指示Matlab的调用命令中等号右侧的变量个数。例如，code 4中的调用，nrhs的值为2，因为它的等号右侧有两个变量，他们是c和d。
+    prhs：mexFunction的第四个参数，它指示Matlab调用命令中等号右侧的变量指针。例如，code 4中的调用，prhs[0]表示的是c，prhs[1]表示的是d。
+    mxArrary是一个不可见的数据类型，是Matlab定义的，大家只需要知道mxArrary的指针与Matlab中的变量一一对应就可以了。
+	Matlab中的数据是按列存储的。例如，a=[1,2;3,4;5,6]，a的数据在内存中的存储顺序是：1、3、5、2、4、6。在C\C++中使用Matlab传来的变量时，一定要注意数据的存储顺序。*/
+
+	
+	
+//[predicted_label, accuracy, decision_values] = svmpredict(testlabel_1, B, model);
+
+
 
 void mexFunction( int nlhs, mxArray *plhs[],
 		 int nrhs, const mxArray *prhs[] )
@@ -300,6 +384,8 @@ void mexFunction( int nlhs, mxArray *plhs[],
 	struct svm_model *model;
 	info = &mexPrintf;
 
+	
+	//nlhs为3，nrhs为3，跳过
 	if(nlhs == 2 || nlhs > 3 || nrhs > 4 || nrhs < 3)
 	{
 		exit_with_help();
@@ -307,17 +393,20 @@ void mexFunction( int nlhs, mxArray *plhs[],
 		return;
 	}
 
+	//判断输入的第一和第二个参数是符合类型
 	if(!mxIsDouble(prhs[0]) || !mxIsDouble(prhs[1])) {
 		mexPrintf("Error: label vector and instance matrix must be double\n");
 		fake_answer(nlhs, plhs);
 		return;
 	}
 
+	
+	//判断第三个输入参数是不是model
 	if(mxIsStruct(prhs[2]))
 	{
 		const char *error_msg;
 
-		// parse options
+		// parse options如果带有参数，分析参数
 		if(nrhs==4)
 		{
 			int i, argc = 1;
@@ -356,14 +445,21 @@ void mexFunction( int nlhs, mxArray *plhs[],
 			}
 		}
 
+		
+		//读取并转换matlab中的model为svm_model结构
 		model = matlab_matrix_to_model(prhs[2], &error_msg);
+		
+		
+		
 		if (model == NULL)
 		{
 			mexPrintf("Error: can't read model: %s\n", error_msg);
 			fake_answer(nlhs, plhs);
 			return;
 		}
-
+		
+		
+		//跳过
 		if(prob_estimate_flag)
 		{
 			if(svm_check_probability_model(model)==0)
@@ -380,7 +476,9 @@ void mexFunction( int nlhs, mxArray *plhs[],
 				info("Model supports probability estimates, but disabled in predicton.\n");
 		}
 
+		//********************************************* prob_estimate_flag=0
 		predict(nlhs, plhs, prhs, model, prob_estimate_flag);
+		
 		// destroy model
 		svm_free_and_destroy_model(&model);
 	}

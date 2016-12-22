@@ -208,6 +208,11 @@ const char *model_to_matlab_structure(mxArray *plhs[], int num_of_feature, struc
 	return NULL;
 }
 
+
+
+//matlab_matrix_to_model()函数将matlab中model转为C中svm_model结构
+
+
 struct svm_model *matlab_matrix_to_model(const mxArray *matlab_struct, const char **msg)
 {
 	int i, j, n, num_of_fields;
