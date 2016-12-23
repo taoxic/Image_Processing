@@ -174,7 +174,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 			tplhs[2] = mxCreateDoubleMatrix(testing_instance_number, 1, mxREAL);
 		else
 			
-		
+		//每个特征都有nr_class*(nr_class-1)/2个决策值，因为一共进行了nr_class*(nr_class-1)/2次判断
 			tplhs[2] = mxCreateDoubleMatrix(testing_instance_number, nr_class*(nr_class-1)/2, mxREAL);
 			
 			
@@ -255,7 +255,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 				
 				double *dec_values = (double *) malloc(sizeof(double) * nr_class*(nr_class-1)/2);
 				
-				//预测的结果
+				//预测的结果￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥
 				predict_label = svm_predict_values(model, x, dec_values);
 				
 				if(nr_class == 1) 
@@ -264,6 +264,8 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 					
 					//存放决策值
 					for(i=0;i<(nr_class*(nr_class-1))/2;i++)
+						
+						//instance_index为当前样本index，ptr_dec_values为第三个返回值
 						ptr_dec_values[instance_index + i * testing_instance_number] = dec_values[i];
 					
 					
@@ -316,6 +318,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 			
 	// return accuracy, mean squared error, squared correlation coefficient
 	tplhs[1] = mxCreateDoubleMatrix(3, 1, mxREAL);
+	
 	ptr = mxGetPr(tplhs[1]);
 	ptr[0] = (double)correct/total*100;
 	ptr[1] = error/total;
@@ -326,6 +329,7 @@ void predict(int nlhs, mxArray *plhs[], const mxArray *prhs[], struct svm_model 
 	if(prob_estimates != NULL)
 		free(prob_estimates);
 
+	//根据svmpredict()函数输出参数个数赋值，3个全部赋值
 	switch(nlhs)
 	{
 		case 3:
