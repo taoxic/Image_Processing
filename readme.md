@@ -39,3 +39,6 @@ SIFT+BOW模型+PCA+最近邻分类+改动Libsvm<br>
 libsvm的源码
 ###2、method
 图像处理方法
+
+##四、思维导图
+![](https://github.com/taoxic/matlab/raw/master/method/img/mind.png)
