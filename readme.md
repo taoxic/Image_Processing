@@ -41,4 +41,4 @@ libsvm的源码
 图像处理方法
 
 ##四、思维导图
-![](https://github.com/taoxic/matlab/raw/master/method/img/mind.png)
+![](https://github.com/taoxic/matlab/raw/master/method/img/behavior.png)
