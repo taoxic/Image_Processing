@@ -1,38 +1,38 @@
 #Í¼Ïñ´¦ÀíµÄ·½·¨
 
-##Ò»¡¢Ö½´üÄ£ÐÍ(BOW)
+##Ò»¡¢Ö½´üÄ£ÐÍ(BOW)[1]
 BOWÄ£ÐÍÊµÏÖ½«¸ßÎ¬Êý¾Ý×ª»»ÎªµÍÎ¬µÄ·½·¨¡£Ê×ÏÈ½«Ô­À´Êý¾ÝÊ¹ÓÃk-means½øÐÐ¾ÛÀà£¬ÕÒµ½ÊÊµ±µÄ¾ÛÀàÖÐÐÄµã<br>
 ÔÙ½«Ô­À´Êý¾ÝÏò¾ÛÀàÖÐÐÄÓ³Éä£¬µÃµ½Ã¿Ò»¸öÔ­À´¸ßÎ¬Êý¾ÝÔÚ¾ÛÀàÖÐÐÄ¿Õ¼äµÄÒ»¸öµÍÎ¬µÄ±íÊ¾¡£<br>
 ##¶þ¡¢BPÉñ¾­ÍøÂç(BP neural network)
 BPÉñ¾­ÍøÂçÊÇÒ»ÖÖ¶à²ãÇ°À¡Éñ¾­ÍøÂç£¬¸ÃÍøÂçµÄÖ÷ÒªÌØµãÊÇÐÅºÅÇ°Ïò´«µÝ£¬Îó²î·´Ïò´«µÝ¡£ÔÚÇ°Ïò´«µÝÖÐ£¬<br>
 ÊäÈëÐÅºÅ´ÓÊäÈë²ã¾­Òþº¬²ãÖð²ã´¦Àí£¬Ö±ÖÁÊä³ö²ã¡£Ã¿Ò»²ãµÄÉñ¾­Ôª×´Ì¬Ö»Ó°ÏìÏÂÒ»²ãÉñ¾­ÔªµÄ×´Ì¬£¬Èç¹û<br>
 Êä³ö²ãµÃ²»µ½ÆÚÍûµÄÊä³ö£¬Ôò×ªÈë·´Ïò´«²¥£¬¸ù¾ÝÔ¤²âÎó²îµ÷ÕûÍøÂçÈ¨ÖµºÍãÐÖµ£¬´Ó¶øÊ¹BPÉñ¾­ÍøÂçÔ¤²âÊä³ö<br>
-²»¶Ï±Æ½üÆÚÍûÊä³ö¡£<br>
+²»¶Ï±Æ½üÆÚÍûÊä³ö¡£<br>[2]
 ÐÞ¸ÄÈ¨ÖµÓÐ²»Í¬µÄ¹æÔò£¬±ê×¼µÄBPÉñ¾­ÍøÂçÑØ×ÅÎó²îÐÔÄÜº¯ÊýÌÝ¶ÈµÄ·´·½ÏòÐÞ¸ÄÈ¨Öµ£¬ÊôÓÚ×îËÙÏÂ½µ·¨¡£ÔÚÊµ¼ÊÖÐ£¬<br>
 Êý¾ÝÁ¿Èç¹û±È½ÏÐ¡£¬¾ÍÓÐ¿ÉÄÜÔÚÕÒ²»µ½Ê¹Îó²î×îÐ¡µÄµã£¬ÈÎÒâÏÝÈë¾Ö²¿×îÓÅ£¬ÉõÖÁÓÚ·ÖÀàÊ§°Ü¡£<br>
 ÆäÖÐ²ÎÊýÉè¶¨±È½Ï¶à£¬²¢ÇÒ²ÎÊýµÄÑ¡ÔñÃ»ÓÐÓÐÐ§µÄ·½·¨¡£Ò»°ãÊÇ¸ù¾Ý¾­Ñé»òÕßÍ¨¹ý·´¸´ÊµÑéÈ·¶¨¡£Òò´Ë£¬ÍøÂçÍùÍù<br>
 ´æÔÚºÜ´óµÄÈßÓàÐÔ£¬ÔÚÒ»¶¨³Ì¶ÈÉÏÒ²Ôö¼ÓÁËÍøÂçÑ§Ï°µÄ¸ºµ£¡£<br>
-##Èý¡¢³ß¶È²»±äÌØÕ÷±ä»»(SIFT)
+##Èý¡¢³ß¶È²»±äÌØÕ÷±ä»»(SIFT)[3]
 SIFTÌØÕ÷¾ßÓÐ³ß¶È²»±äÐÔ£¬¿ÉÒÔÔÚÍ¼ÏñÖÐ¼ì²â³ö¹Ø¼üµã£¬ÊÇÒ»ÖÖ¾Ö²¿ÌØÕ÷ÃèÊö×Ó¡£SIFTÌØÕ÷ÊÇ»ùÓÚÎïÌåÉÏµÄÒ»Ð©<br>
 ¾Ö²¿Íâ¹ÛµÄÐËÈ¤µã¶øÓëÓ°ÏñµÄ´óÐ¡ºÍÐý×ªÎÞ¹Ø¡£<br>
-##ËÄ¡¢¾ö²ßÊ÷(decision tree)
+##ËÄ¡¢¾ö²ßÊ÷(decision tree)[4]
 ¾ö²ßÊ÷ÊÇÒ»¸öÊ÷ÐÎ½á¹¹¡£Ã¿Ò»¸ö·ÇÒ¶×Ó½Úµã±íÊ¾Ò»¸öÌØÕ÷ÊôÐÔµÄÅÐ±ðÌõ¼þ£¬Ã¿¸öÒ¶½Úµã´æ·ÅÒ»¸öÀà±ð¡£Ê¹ÓÃ¾ö²ßÊ÷µÄ<br>
 ¹ý³Ì¾ÍÊÇ´Ó¸ù½Úµã¿ªÊ¼£¬ÊäÈëÌØÕ÷ÏòÁ¿£¬ÅÐ±ðÌØÕ÷ÖÐÏàÓ¦µÄÌØÕ÷ÊôÐÔ£¬²¢°´ÕÕÆäÖµÑ¡Ôñ²»Í¬µÄÊä³ö·ÖÖ§£¬´Ó¶øµ½´ï²»Í¬<br>
 µÄÒ¶×Ó½Úµã£¬Ò¶×Ó½Úµã´æ·ÅµÄÀà±ð¼´Îª¾ö²ß½á¹û¡£<br>
 ÀûÓÃÁËmatlabÖÐµÄfitctreeÀ´¹¹Ôì¾ö²ßÊ÷£¬²ÉÓÃµÄÊÇCARTËã·¨¡£
-##Îå¡¢ÌØÕ÷ÈÚºÏ(feature combination)
+##Îå¡¢ÌØÕ÷ÈÚºÏ(feature combination)[5]
 ÌØÕ÷ÈÚºÏ·ÖÎªÇ°ÆÚÈÚºÏºÍºóÆÚÈÚºÏ¡£Ç°ÆÚÈÚºÏ¾ÍÊÇ½«¶àÖÖÌØÕ÷ÏòÁ¿Ö±½ÓÆ´½Ó×éºÏÎªÐÂµÄÌØÕ÷ÏòÁ¿£¬Ö±½ÓÆ´½ÓµÄÐ§¹û<br>
 ²»ÊÇºÜºÃ¡£»¹¿ÉÒÔÍ¨¹ý¸øÌØÕ÷¸³¸øÒ»¶¨È¨Öµ£¬·½Ê½¾ÍÊÇÍ¨¹ý·ÖÀàµÄÕýÈ·ÂÊµü´úµÄÈ·¶¨È¨Öµ£¬ÒÔ´ïµ½ÂúÒâµÄ·ÖÀàÐ§¹û¡£<br>
 ºóÆÚÈÚºÏÎª¶àºËÑ§Ï°ÊÇÕë¶Ôsvm·ÖÀàÀ´ÊµÏÖµÄ£¬Ê×ÏÈ½«ÌØÕ÷ÏòÁ¿·Ö±ðÑ¡È¡¶ÔÓ¦Ð§¹ûºÃµÄºËº¯Êý½øÐÐ´¦Àí£¬µ½¸ßÎ¬¿Õ¼äÔÙÍ¨¹ýÒ»¶¨È¨Öµ<be>
 ½«Æä½áºÏÆðÀ´¡£
-##Áù¡¢·½ÏòÌÝ¶ÈÖ±·½Í¼(HOG)
+##Áù¡¢·½ÏòÌÝ¶ÈÖ±·½Í¼(HOG)[6]
 HOGÊÇÓÃÀ´½øÐÐÎïÌå¼ì²âµÄÌØÕ÷ÃèÊö×Ó¡£Í¨¹ý¼ÆËãºÍÍ³¼ÆÍ¼Ïñ¾Ö²¿ÇøÓòµÄÌÝ¶È·½ÏòÖ±·½Í¼À´¹¹³ÉÌØÕ÷¡£HOGµÄÊµÏÖ·½Ê½ÊÇ<br>
 Ê×ÏÈ½«Í¼Ïñ·Ö³ÉÐ¡µÄÏ¸°ûµ¥Ôª£¬È»ºó²É¼¯Ï¸°ûµ¥ÔªÖÐ¸÷ÏñËØµãµÄÌÝ¶ÈµÄ»ò±ßÔµµÄ·½ÏòÖ±·½Í¼£¬ÔÙ°ÑÕâÐ©Ö±·½Í¼½áºÏÆðÀ´<br>
 ¹¹³ÉÌØÕ÷ÃèÊöÆ÷¡£<br>
 ÓÉÓÚHOGÊÇÔÚÍ¼ÏñµÄ¾Ö²¿·½¸ñµ¥ÔªÉÏ²Ù×÷£¬ËùÒÔËü¶ÔÍ¼Ïñ¼¸ºÎµÄºÍ¹âÑ§µÄÐÎ±ä¶¼ÄÜ±£³ÖºÜºÃµÄ²»±äÐÔ£¬Á½ÖÖÐÎ±äÖ»»á³öÏÖÔÚ<br>
 ¸ü´óµÄ¿Õ¼äÁìÓòÉÏ¡£³ÌÐò²ÉÓÃµÄÊÇmatlab×Ô´øµÄº¯ÊýextractHOGFeatures()¿ÉÒÔÖ±½ÓÊä³öHOGÌØÕ÷£¬ÌØÕ÷µÄÎ¬ÊýºÍÍ¼Ïñ<br>
 ´óÐ¡ÓÐ¹Ø¡£
-##Æß¡¢Ö÷³ÉÒò·ÖÎö(PCA)
+##Æß¡¢Ö÷³ÉÒò·ÖÎö(PCA)[7]
 PCA£¨Principal Component Analysis£©ÊÇÒ»ÖÖ³£ÓÃµÄÊý¾Ý·ÖÎö·½·¨¡£PCAÍ¨¹ýÏßÐÔ±ä»»½«Ô­Ê¼Êý¾Ý±ä»»ÎªÒ»×é<br>
 ¸÷Î¬¶ÈÏßÐÔÎÞ¹ØµÄ±íÊ¾£¬¿ÉÓÃÓÚÌáÈ¡Êý¾ÝµÄÖ÷ÒªÌØÕ÷·ÖÁ¿£¬³£ÓÃÓÚ¸ßÎ¬Êý¾ÝµÄ½µÎ¬¡£<br>
 PCAµÄÔ­Àí¾ÍÊÇ°ÑÔ­À´µÄÊý¾ÝÑù±¾Í¶Ó°µ½Ò»¸öÐÂµÄ¿Õ¼äÖ®ÖÐ£¬¿ÉÒÔÀí½âÎª°ÑÒ»×é×ø±ê×ª»»µ½ÁíÍâÒ»×é×ø±êÏÂ£¬<br>
@@ -41,6 +41,14 @@ PCAµÄÔ­Àí¾ÍÊÇ°ÑÔ­À´µÄÊý¾ÝÑù±¾Í¶Ó°µ½Ò»¸öÐÂµÄ¿Õ¼äÖ®ÖÐ£¬¿ÉÒÔÀí½âÎª°ÑÒ»×é×ø±ê×ª»»µ½Á
 Ò²¾ÍÊÇËµ£¬Í¨¹ýÈ¥³ýÐÅÏ¢Á¿±È½ÏÐ¡»òÕßÃ»ÓÐµÄÎ¬Êý£¬ÒÔ´ïµ½½µÎ¬µÄÄ¿µÄ¡£Êµ¼ÊÉÏPCAÊÇ¶ªÊ§Ô­Ê¼Êý¾ÝÐÅÏ¢×îÉÙµÄ<br>
 Ò»ÖÖÏßÐÔ½µÎ¬·½Ê½¡£¼´×î½Ó½üÔ­Ê¼Êý¾Ý£¬µ«ÊÇPCA²¢²»ÊÔÍ¼È¥Ì½Ë÷Êý¾ÝÄÚÔÚ½á¹¹¡£<br>
 
+
+[1]Elyasir, Ayoub Mohamed H.; Anbananthen, Kalaiarasi Sonai Muthu "Comparison between Bag of Words and Word Sense Disambiguation" (2015)<br>
+[2]Huang, Guang-Bin; Zhu, Qin-Yu; Siew, Chee-Kheong "Extreme learning machine: Theory and applications" (2006)<br>
+[3]D.G. Lowe "Distinctive image features from scale-invariant keypoints "Int. J. Comput. Vision, 60 (2004), pp. 91¨C110<br>
+[4]Quinlan J. R "Induction of decision trees" Machine Learning ,(1986),(1),81-106<br>
+[5]Tang, Dejun; Zhang, Weishi; Qu, Xiaolu "A Feature Fusion Method for Feature Extraction" (2012)<br>
+[6]N. Dalal, Bill. Triggs "Histograms of oriented gradients for human detection" (2005)<br>
+[7]Wold et al., 1987S. Wold, K. Esbensen, P. Geladi "Principal component analysis" Chemometrics and Intelligent Laboratory Systems, 2 (1987), pp. 37¨C52<br>
 
 
 
