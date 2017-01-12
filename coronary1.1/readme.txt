@@ -2,3 +2,4 @@
 
 1、coronary1.0的方法 result.jpg
 2、进行去噪后的结果  result1.jpg
+3、形态学骨架提取    result_ske.jpg
