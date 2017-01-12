@@ -65,4 +65,9 @@ end
 
 figure,imshow(im);
 
+%形态学骨架提取，使图像更清晰
+BW2=bwmorph(im,'skel',1);
+imshow(im)
+figure,imshow(BW2)
+
 
