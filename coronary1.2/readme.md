@@ -1,5 +1,5 @@
 1¡¢Ô­Ê¼Í¼Ïñ<br>
-<table><tr>
+<table align = "center"><tr>
 <td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/c_lm_29.bmp" width = "200" height = "200" alt="Í¼Æ¬Ãû³Æ"  /></td>
 <td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/c_gc_40.bmp" width = "200" height = "200" alt="Í¼Æ¬Ãû³Æ" /></td>
 <td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/c_cqj_37.bmp" width = "200" height = "200" alt="Í¼Æ¬Ãû³Æ"  /></td>
