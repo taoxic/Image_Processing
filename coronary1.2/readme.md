@@ -10,7 +10,7 @@
 </tr></table><br>
 1、增强对比度
 <table>
-<td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/cqj_result/result1.bmp" width = "250" height = "250"  /></td>
+<td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/c_result/result1.bmp" width = "250" height = "250"  /></td>
 <td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/lm_result/result1.bmp" width = "250" height = "250"  /></td>
 <td><img src="https://github.com/taoxic/matlab/raw/master/coronary1.2/gc_result/result1.bmp" width = "250" height = "250" /></td>
 </tr></table><br>
